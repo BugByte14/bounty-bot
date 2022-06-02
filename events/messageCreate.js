@@ -2,9 +2,8 @@ const index = require("../index.js");
 
 module.exports = {
     name: "messageCreate",
-    execute(message) {
-        const userStats = index.stats[message.author.id];
-        console.log(userStats);
+    execute(message, stats) {
+        const userStats = stats[message.author.id];
         try {
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
                 userStats.xp += 20;
@@ -39,7 +38,7 @@ module.exports = {
                     const users = Array.from(message.mentions.users.values());
                     const user = guildStats[users[0].id];
                     user.level = parseInt(parts[2]);
-                    user.xp = 100 + (user.level - 1) * 20;
+                    user.xp = (100 * user.level) + ((user.level - 1) * user.level) * 20;
                     message.reply(user.toString() + " now has a bounty of " + user.level);
                 }
                 else {
