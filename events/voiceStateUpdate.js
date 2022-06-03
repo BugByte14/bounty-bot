@@ -18,8 +18,8 @@ module.exports = {
                     if (oldState.member.roles.cache.some(r=> r.name === 'bots') === false) {
                         let xpGain = 5 * Math.floor(timeInVc / 60);
                         stats[oldState.member.user.id].xp += xpGain;
-                        console.log(oldState.member.user.tag + " gained " + xpGain + " xp from being in " + oldUserChannel + " for " + timeInVc + " seconds.");
-                        if (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
+                        console.log(oldState.member.user.tag + " gained " + xpGain + " xp from being in " + oldUserChannel.name + " for " + timeInVc + " seconds.");
+                        while (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
                             stats[oldState.member.user.id].level += 1;
                             stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
                             console.log(oldState.member.user.tag + " is now level " + stats[oldState.member.user.id].level);
