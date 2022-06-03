@@ -5,7 +5,8 @@ const fs = require('fs');
 const client = new Discord.Client({ intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_VOICE_STATES'] });
 module.exports.client = client;
 
-var stats = {};
+let statsFile = fs.readFileSync('./data/stats.json');
+let stats = JSON.parse(statsFile);
 module.exports.stats = stats;
 
 const commandFiles = fs.readdirSync("./commands");

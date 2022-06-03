@@ -1,30 +1,37 @@
+const fs = require('fs');
+const index = require("../index.js");
+
 module.exports = {
     name: "voiceStateUpdate",
     execute(oldState, newState, stats) {        
         let newUserChannel = newState.channel;
         let oldUserChannel = oldState.channel;
         if (oldUserChannel === null && newUserChannel !== null) {
-            const joinTime = Date.now();        //TODO: Store join dates in database for later access.
-            console.log(newState.member.user.username + " joined " + newUserChannel + " at " + joinTime);
+            stats[newState.member.user.id].joinTime = Date.now();
+            console.log(newState.member.user.username + " joined " + newUserChannel.name + " at " + stats[newState.member.user.id].joinTime);
+            fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
         }
         else if (oldUserChannel !== null && newUserChannel === null) {
-            const userStats = stats[oldState.member.user.id];
-            const leaveTime = Date.now();
-            console.log(oldState.member.user.username + " left " + oldUserChannel + " at " + leaveTime);
-            /*timeInVc = leaveTime - joinTime;
+            stats[oldState.member.user.id].leaveTime = Date.now();
+            console.log(oldState.member.user.username + " left " + oldUserChannel.name + " at " + stats[oldState.member.user.id].leaveTime);
+            timeInVc = (stats[oldState.member.user.id].leaveTime - stats[oldState.member.user.id].joinTime) / 1000;
+            console.log(timeInVc);
             try {
                 if (oldState.member.roles.cache.some(r=> r.name === 'bots') === false) {
-                    userStats.xp += 5 * Math.floor(timeInVc / 60);
-                    if (userStats.xp >= userStats.xpRequired) {
-                        userStats.level += 1;
-                        userStats.xpRequired += 100 + userStats.level * 20;
-                        index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + userStats.level + ",000.00!**");
+                    stats[oldState.member.user.id].xp += 5 * Math.floor(timeInVc / 60);
+                    if (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
+                        stats[oldState.member.user.id].level += 1;
+                        stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
+                        index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
                     }
                 }
+                stats[oldState.member.user.id].joinTime = 0;
+                stats[oldState.member.user.id].leaveTime = 0;
+                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             }
             catch (e) {
                 console.error(e.message);
-            }*/
+            }
         }
     }
 }
