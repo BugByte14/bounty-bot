@@ -23,4 +23,5 @@ for (const file of eventFiles) {
     }
 }
 
-client.login(token.bot);
+//client.login(token.bot);
+client.login(process.env.BOT_TOKEN);
