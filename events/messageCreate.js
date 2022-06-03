@@ -1,16 +1,21 @@
 const fs = require('fs');
+const { MessageEmbed } = require(`discord.js`);
 const index = require("../index.js");
+const random = require('random');
 
 module.exports = {
     name: "messageCreate",
     execute(message, stats) {
         try {
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
-                stats[message.author.id].xp += 20;
+                xpGain = random.int(15, 30);
+                stats[message.author.id].xp += xpGain;
+                console.log(message.author.tag + " gained " + xpGain + " xp for message '" + message.content + "' in " + message.channel.name);
                 if (stats[message.author.id].xp >= stats[message.author.id].xpRequired) {
                     stats[message.author.id].level += 1;
                     stats[message.author.id].xpRequired += 100 + stats[message.author.id].level * 20;
-                    index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + stats[message.author.id].toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
+                    console.log(message.author.tag + " is now level " + stats[message.author.id].level);
+                    index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 }
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             }
@@ -24,31 +29,27 @@ module.exports = {
         if (parts[0] === '$xp') {
             message.reply(message.author.toString() + ' has ' + stats[message.author.id].xp + ' xp.');
         }
-        if (parts[0] === '$level') {
-            message.reply(message.author.toString() + ' has a bounty of $' + stats[message.author.id].level + ',000.00.');
+        if (parts[0] === '$bounty') {
+            message.reply(message.author.toString() + ' has a bounty of $' + stats[message.author.id].level + ',000.00.\n' + 'You need ' + (stats[message.author.id].xpRequired - stats[message.author.id].xp) + ' more xp to increase your bounty.');
         }
-        if (parts[0] === '$xprequired') {
-            message.reply(message.author.toString() + ' requires ' + stats[message.author.id].xpRequired + ' xp to increase bounty.');
-        }
-        if (parts[0] === '$xpleft') {
-            message.reply(message.author.toString() + ' needs ' + (stats[message.author.id].xpRequired - stats[message.author.id].xp) + ' more xp to increase bounty.');
-        }
-        if (parts[0] === '$setlevel') {
-            try {
-                if (message.member.permissions.has('ADMINISTRATOR')) {
-                    const users = Array.from(message.mentions.users.values());
-                    const user = guildStats[users[0].id];
-                    user.level = parseInt(parts[2]);
-                    user.xp = 10 * (Math.pow(user.level, 2) + 11 * user.level);
-                    message.reply(user.toString() + " now has a bounty of " + user.level);
-                }
-                else {
-                    message.reply("You must be an administrator to use this command.");
-                }
-            }
-            catch (e) {
-                console.error(e.message);
-            }
+        if (parts[0] === '$wanted') {       //currently manual, will update to sort json eventually
+            let top = [0, 0, 0, 0, 0];
+            top[0] = stats['459234138554105868'];
+            top[1] = stats['226495910861996032'];
+            top[2] = stats['535323821893222420'];
+            top[3] = stats['707123269001543721'];
+            top[4] = stats['336208957456515072'];
+            const mostWanted = new MessageEmbed()
+	            .setColor('#0099ff')
+	            .setTitle('Most Wanted')
+	            .setDescription(  '#1. ' + index.client.users.cache.get('459234138554105868').tag + ':   $' +  top[0].level + ',000.00\n'
+                                + '#2. ' + index.client.users.cache.get('226495910861996032').tag + ':   $' +  top[1].level + ',000.00\n'
+                                + '#3. ' + index.client.users.cache.get('535323821893222420').tag + ':   $' +  top[2].level + ',000.00\n'
+                                + '#4. ' + index.client.users.cache.get('707123269001543721').tag + ':   $' +  top[3].level + ',000.00\n'
+                                + '#5. ' + index.client.users.cache.get('336208957456515072').tag + ':   $' +  top[4].level + ',000.00\n')
+	            .setTimestamp()
+
+            message.channel.send({ embeds: [mostWanted] });
         }
     }
 }
