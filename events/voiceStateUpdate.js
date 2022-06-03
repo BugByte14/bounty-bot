@@ -11,26 +11,28 @@ module.exports = {
             console.log(newState.member.user.username + " joined " + newUserChannel.name + " at " + stats[newState.member.user.id].joinTime);
             fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
         }
-        else if (oldUserChannel !== null && newUserChannel === null) {
-            stats[oldState.member.user.id].leaveTime = Date.now();
-            console.log(oldState.member.user.username + " left " + oldUserChannel.name + " at " + stats[oldState.member.user.id].leaveTime);
-            timeInVc = (stats[oldState.member.user.id].leaveTime - stats[oldState.member.user.id].joinTime) / 1000;
-            console.log(timeInVc);
-            try {
-                if (oldState.member.roles.cache.some(r=> r.name === 'bots') === false) {
-                    stats[oldState.member.user.id].xp += 5 * Math.floor(timeInVc / 60);
-                    if (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
-                        stats[oldState.member.user.id].level += 1;
-                        stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
-                        index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
+        else if (oldUserChannel !== null && oldUserChannel.id !== '975832580857405531') {
+            if (newUserChannel === null || newUserChannel.id === '975832580857405531') {       //checks if user left vc or moved to afk vc, stops counting xp
+                stats[oldState.member.user.id].leaveTime = Date.now();
+                console.log(oldState.member.user.username + " left " + oldUserChannel + " at " + stats[oldState.member.user.id].leaveTime);
+                timeInVc = (stats[oldState.member.user.id].leaveTime - stats[oldState.member.user.id].joinTime) / 1000;
+                console.log(timeInVc);
+                try {
+                    if (oldState.member.roles.cache.some(r=> r.name === 'bots') === false) {
+                        stats[oldState.member.user.id].xp += 5 * Math.floor(timeInVc / 60);
+                        if (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
+                            stats[oldState.member.user.id].level += 1;
+                            stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
+                            index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
+                        }
                     }
+                    stats[oldState.member.user.id].joinTime = 0;
+                    stats[oldState.member.user.id].leaveTime = 0;
+                    fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
                 }
-                stats[oldState.member.user.id].joinTime = 0;
-                stats[oldState.member.user.id].leaveTime = 0;
-                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
-            }
-            catch (e) {
-                console.error(e.message);
+                catch (e) {
+                    console.error(e.message);
+                }
             }
         }
     }
