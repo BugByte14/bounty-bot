@@ -10,11 +10,11 @@ module.exports = {
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
                 xpGain = random.int(15, 30);
                 stats[message.author.id].xp += xpGain;
-                console.log(message.author.tag + " gained " + xpGain + " xp for message '" + message.content + "' in " + message.channel.name);
+                console.log("𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐱𝐩: " + message.author.tag + " gained " + xpGain + " xp for message '" + message.content + "' in " + message.channel.name);
                 if (stats[message.author.id].xp >= stats[message.author.id].xpRequired) {
                     stats[message.author.id].level += 1;
                     stats[message.author.id].xpRequired += 100 + stats[message.author.id].level * 20;
-                    console.log(message.author.tag + " is now level " + stats[message.author.id].level);
+                    console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + message.author.tag + " is now level " + stats[message.author.id].level);
                     index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 }
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
