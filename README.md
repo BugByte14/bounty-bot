@@ -1,5 +1,5 @@
 # Bounty Bot
-A levelling discord bot I developed for use on my [discord server](discord.gg/Y8EF5H5).
+A levelling discord bot I developed for use on my [discord server](https://discord.gg/Y8EF5H5).
 
 ## Features
 * Counts messages users (except bots) send.
