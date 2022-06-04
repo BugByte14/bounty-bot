@@ -5,16 +5,6 @@ module.exports = {
     name: "ready",
     once: true,
     execute(client, stats) {
-        const guild = client.guilds.cache.get('674441808293658656').members.fetch().then(members => {
-            members.forEach(member => {
-                /*if (member.user.id in stats === false) {
-                    stats[member.user.id] = {
-                        xp: 0,
-                        level: 0,
-                        xpRequired: 100
-                    }
-                }*/
-            })
-        })
+        console.log('Bounty Bot is now running.');
     }
 }
