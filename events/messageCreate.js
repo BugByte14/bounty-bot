@@ -15,8 +15,8 @@ module.exports = {
                     stats[message.author.id].level += 1;
                     stats[message.author.id].xpRequired += 100 + stats[message.author.id].level * 20;
                     console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + message.author.tag + " is now level " + stats[message.author.id].level);
-                    index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 }
+                index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             }
         }
@@ -38,7 +38,7 @@ module.exports = {
             top[1] = stats['226495910861996032'];
             top[2] = stats['535323821893222420'];
             top[3] = stats['707123269001543721'];
-            top[4] = stats['336208957456515072'];
+            top[4] = stats['335561783765106689'];
             const mostWanted = new MessageEmbed()
 	            .setColor('#0099ff')
 	            .setTitle('Most Wanted')
@@ -46,7 +46,7 @@ module.exports = {
                                 + '#2. ' + index.client.users.cache.get('226495910861996032').tag + ':   $' +  top[1].level + ',000.00\n'
                                 + '#3. ' + index.client.users.cache.get('535323821893222420').tag + ':   $' +  top[2].level + ',000.00\n'
                                 + '#4. ' + index.client.users.cache.get('707123269001543721').tag + ':   $' +  top[3].level + ',000.00\n'
-                                + '#5. ' + index.client.users.cache.get('336208957456515072').tag + ':   $' +  top[4].level + ',000.00\n')
+                                + '#5. ' + index.client.users.cache.get('335561783765106689').tag + ':   $' +  top[4].level + ',000.00\n')
 	            .setTimestamp()
 
             message.channel.send({ embeds: [mostWanted] });
