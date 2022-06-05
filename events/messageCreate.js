@@ -15,8 +15,8 @@ module.exports = {
                     stats[message.author.id].level += 1;
                     stats[message.author.id].xpRequired += 100 + stats[message.author.id].level * 20;
                     console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + message.author.tag + " is now level " + stats[message.author.id].level);
+                    index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 }
-                index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             }
         }

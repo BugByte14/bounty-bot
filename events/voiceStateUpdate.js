@@ -24,8 +24,8 @@ module.exports = {
                                 stats[oldState.member.user.id].level += 1;
                                 stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
                                 console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + oldState.member.user.tag + " is now level " + stats[oldState.member.user.id].level);
-                                index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
                             }
+                            index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
                         }
                         stats[oldState.member.user.id].joinTime = 0;
                         stats[oldState.member.user.id].leaveTime = 0;
