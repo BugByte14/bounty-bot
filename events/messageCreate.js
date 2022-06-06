@@ -52,17 +52,22 @@ module.exports = {
                     }
                 })
             }
-            const mostWanted = new MessageEmbed()
-	            .setColor('#0099ff')
-	            .setTitle('Most Wanted')
-	            .setDescription(  '#1. ' + top[0].user + ':   $' +  top[0].level + ',000.00\n'
-                                + '#2. ' + top[1].user + ':   $' +  top[1].level + ',000.00\n'
-                                + '#3. ' + top[2].user + ':   $' +  top[2].level + ',000.00\n'
-                                + '#4. ' + top[3].user + ':   $' +  top[3].level + ',000.00\n'
-                                + '#5. ' + top[4].user + ':   $' +  top[4].level + ',000.00\n')
-	            .setTimestamp()
+            try {
+                const mostWanted = new MessageEmbed()
+	                .setColor('#0099ff')
+	                .setTitle('Most Wanted')
+	                .setDescription(  '#1. ' + message.guild.members.cache.get(top[0].user).tag + ':   $' +  top[0].level + ',000.00\n'
+                                    + '#2. ' + message.guild.members.cache.get(top[1].user).tag + ':   $' +  top[1].level + ',000.00\n'
+                                    + '#3. ' + message.guild.members.cache.get(top[2].user).tag + ':   $' +  top[2].level + ',000.00\n'
+                                    + '#4. ' + message.guild.members.cache.get(top[3].user).tag + ':   $' +  top[3].level + ',000.00\n'
+                                    + '#5. ' + message.guild.members.cache.get(top[4].user).tag + ':   $' +  top[4].level + ',000.00\n')
+	                .setTimestamp()
 
-            message.channel.send({ embeds: [mostWanted] });
+                message.channel.send({ embeds: [mostWanted] });
+            }
+            catch {
+                message.channel.send("Failed to run command. Please try again later.");
+            }
         }
     }
 }
