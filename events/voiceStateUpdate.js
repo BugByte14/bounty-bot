@@ -7,7 +7,7 @@ module.exports = {
         try {
             let newUserChannel = newState.channel;
             let oldUserChannel = oldState.channel;
-            if ((oldUserChannel === null || oldUserChannel === '975832580857405531') && newUserChannel !== null) {
+            if ((oldUserChannel === null || oldUserChannel.id === '975832580857405531') && newUserChannel !== null) {
                 stats[newState.member.user.id].joinTime = Date.now();
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             }
