@@ -8,10 +8,10 @@ module.exports = {
     name: "messageCreate",
     execute(message, stats) {
         try {
-            message.guild.members.fetch(message.author.id).then((user) => {
+            /*message.guild.members.fetch(message.author.id).then((user) => {
                 stats[user.id].userTag = user.tag;
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
-            });
+            });*/
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
                 xpGain = random.int(15, 30);
                 stats[message.author.id].xp += xpGain;
@@ -44,7 +44,7 @@ module.exports = {
                     if (stats[key].xp > top[i].xp) {
                         if (top.includes(stats[key]) === false) {
                             top[i] = stats[key];
-                            top[i].userTag = key;
+                            top[i].user = key;
                             /*client.users.fetch(key).then((user) => {
                                 top[i].user = user.tag;
                             });*/
@@ -52,7 +52,6 @@ module.exports = {
                     }
                 })
             }
-            console.log(top[1].user);
             const mostWanted = new MessageEmbed()
 	            .setColor('#0099ff')
 	            .setTitle('Most Wanted')
