@@ -1,12 +1,17 @@
 const fs = require('fs');
 const { MessageEmbed } = require(`discord.js`);
 const index = require("../index.js");
+const client = index.client;
 const random = require('random');
 
 module.exports = {
     name: "messageCreate",
     execute(message, stats) {
         try {
+            message.guild.members.fetch(message.author.id).then((user) => {
+                stats[user.id].userTag = user.tag;
+                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
+            });
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
                 xpGain = random.int(15, 30);
                 stats[message.author.id].xp += xpGain;
@@ -32,21 +37,30 @@ module.exports = {
         if (parts[0] === '$bounty') {
             message.reply(message.author.toString() + ' has a bounty of $' + stats[message.author.id].level + ',000.00.\n' + 'You need ' + (stats[message.author.id].xpRequired - stats[message.author.id].xp) + ' more xp to increase your bounty.');
         }
-        if (parts[0] === '$wanted') {       //currently manual, will update to sort json eventually
-            let top = [0, 0, 0, 0, 0];
-            top[0] = stats['459234138554105868'];
-            top[1] = stats['226495910861996032'];
-            top[2] = stats['535323821893222420'];
-            top[3] = stats['707123269001543721'];
-            top[4] = stats['335561783765106689'];
+        if (parts[0] === '$wanted') {
+            let top = [stats['0'], stats['0'], stats['0'], stats['0'], stats['0']];
+            for (i in top) {
+                Object.keys(stats).forEach(function(key) {
+                    if (stats[key].xp > top[i].xp) {
+                        if (top.includes(stats[key]) === false) {
+                            top[i] = stats[key];
+                            top[i].userTag = key;
+                            /*client.users.fetch(key).then((user) => {
+                                top[i].user = user.tag;
+                            });*/
+                        }
+                    }
+                })
+            }
+            console.log(top[1].user);
             const mostWanted = new MessageEmbed()
 	            .setColor('#0099ff')
 	            .setTitle('Most Wanted')
-	            .setDescription(  '#1. ' + index.client.users.cache.get('459234138554105868').tag + ':   $' +  top[0].level + ',000.00\n'
-                                + '#2. ' + index.client.users.cache.get('226495910861996032').tag + ':   $' +  top[1].level + ',000.00\n'
-                                + '#3. ' + index.client.users.cache.get('535323821893222420').tag + ':   $' +  top[2].level + ',000.00\n'
-                                + '#4. ' + index.client.users.cache.get('707123269001543721').tag + ':   $' +  top[3].level + ',000.00\n'
-                                + '#5. ' + index.client.users.cache.get('335561783765106689').tag + ':   $' +  top[4].level + ',000.00\n')
+	            .setDescription(  '#1. ' + top[0].user + ':   $' +  top[0].level + ',000.00\n'
+                                + '#2. ' + top[1].user + ':   $' +  top[1].level + ',000.00\n'
+                                + '#3. ' + top[2].user + ':   $' +  top[2].level + ',000.00\n'
+                                + '#4. ' + top[3].user + ':   $' +  top[3].level + ',000.00\n'
+                                + '#5. ' + top[4].user + ':   $' +  top[4].level + ',000.00\n')
 	            .setTimestamp()
 
             message.channel.send({ embeds: [mostWanted] });
