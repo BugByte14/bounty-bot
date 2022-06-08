@@ -17,15 +17,19 @@ module.exports = {
                     timeInVc = (stats[oldState.member.user.id].leaveTime - stats[oldState.member.user.id].joinTime) / 1000;
                     try {
                         if (oldState.member.roles.cache.some(r=> r.name === 'bots') === false) {
+                            let leveledUp = false;
                             let xpGain = 5 * Math.floor(timeInVc / 60);
                             stats[oldState.member.user.id].xp += xpGain;
                             console.log("𝐕𝐨𝐢𝐜𝐞 𝐱𝐩: " + oldState.member.user.tag + " gained " + xpGain + " xp from being in " + oldUserChannel.name + " for " + timeInVc + " seconds.");
                             while (stats[oldState.member.user.id].xp >= stats[oldState.member.user.id].xpRequired) {
+                                leveledUp = true;
                                 stats[oldState.member.user.id].level += 1;
                                 stats[oldState.member.user.id].xpRequired += 100 + stats[oldState.member.user.id].level * 20;
                                 console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + oldState.member.user.tag + " is now level " + stats[oldState.member.user.id].level);
                             }
-                            index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
+                            if (leveledUp) {
+                                index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + oldState.member.user.toString() + " now 'as a bounty of $" + stats[oldState.member.user.id].level + ",000.00!**");
+                            }
                         }
                         stats[oldState.member.user.id].joinTime = 0;
                         stats[oldState.member.user.id].leaveTime = 0;
