@@ -5,6 +5,7 @@ module.exports = {
     name: "ready",
     once: true,
     execute(client, stats) {
+        client.guilds.fetch('674441808293658656').then(guild => { guild.members.fetch(); })
         console.log('Bounty Bot is now running.');
     }
 }
