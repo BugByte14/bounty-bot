@@ -38,16 +38,13 @@ module.exports = {
             message.reply(message.author.toString() + ' has a bounty of $' + stats[message.author.id].level + ',000.00.\n' + 'You need ' + (stats[message.author.id].xpRequired - stats[message.author.id].xp) + ' more xp to increase your bounty.');
         }
         if (parts[0] === '$wanted') {
-            let top = [stats['0'], stats['0'], stats['0'], stats['0'], stats['0']];
+            let top = [stats['0'], stats['0'], stats['0'], stats['0'], stats['0'], stats['0'], stats['0']];
             for (i in top) {
                 Object.keys(stats).forEach(function(key) {
                     if (stats[key].xp > top[i].xp) {
                         if (top.includes(stats[key]) === false) {
                             top[i] = stats[key];
                             top[i].user = key;
-                            /*client.users.fetch(key).then((user) => {
-                                top[i].user = user.tag;
-                            });*/
                         }
                     }
                 })
@@ -60,7 +57,9 @@ module.exports = {
                                     + '#2. ' + message.guild.members.cache.get(top[1].user).tag + ':   $' +  top[1].level + ',000.00\n'
                                     + '#3. ' + message.guild.members.cache.get(top[2].user).tag + ':   $' +  top[2].level + ',000.00\n'
                                     + '#4. ' + message.guild.members.cache.get(top[3].user).tag + ':   $' +  top[3].level + ',000.00\n'
-                                    + '#5. ' + message.guild.members.cache.get(top[4].user).tag + ':   $' +  top[4].level + ',000.00\n')
+                                    + '#5. ' + message.guild.members.cache.get(top[4].user).tag + ':   $' +  top[4].level + ',000.00\n'
+                                    + '#6. ' + message.guild.members.cache.get(top[5].user).tag + ':   $' +  top[5].level + ',000.00\n'
+                                    + '#7. ' + message.guild.members.cache.get(top[6].user).tag + ':   $' +  top[6].level + ',000.00\n')
 	                .setTimestamp()
 
                 message.channel.send({ embeds: [mostWanted] });
