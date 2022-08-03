@@ -13,7 +13,7 @@ module.exports = {
                 fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
             });*/
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
-                xpGain = random.int(15, 30);
+                xpGain = random.int(20, 40);
                 stats[message.author.id].xp += xpGain;
                 console.log("𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐱𝐩: " + message.author.tag + " gained " + xpGain + " xp for message '" + message.content + "' in " + message.channel.name);
                 if (stats[message.author.id].xp >= stats[message.author.id].xpRequired) {
@@ -66,6 +66,33 @@ module.exports = {
             }
             catch {
                 message.channel.send("Failed to run command. Please try again later.");
+            }
+        }
+        if (parts[0] === '$addxp') {
+            if (message.member.roles.cache.some(r=> r.name === 'Captain') === true) {
+                gainer = parts[1].split('@').pop().split('>')[0];
+                gain = parseInt(parts[2]);
+                console.log(gain);
+                try {
+                    stats[gainer].xp += gain;
+                    while (true) {
+                        if (stats[gainer].xp >= stats[gainer].xpRequired) {
+                            stats[gainer].level += 1;
+                            stats[gainer].xpRequired += 100 + stats[gainer].level * 20;
+                        }
+                        else {
+                            console.log("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + gainer + " is now level " + stats[gainer].level);
+                            index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + parts[1].toString() + " now 'as a bounty of $" + stats[gainer].level + ",000.00!**");
+                            break;
+                        }
+                    }
+                }
+                catch {
+                    message.reply("Incorrect format, please try again.");
+                }
+            }
+            else {
+                message.reply("Ayy, this command be only used by the captain.");
             }
         }
     }
