@@ -95,5 +95,13 @@ module.exports = {
                 message.reply("Ayy, this command be only used by the captain.");
             }
         }
+        if (parts[0] === '$stop') {
+            if (message.member.roles.cache.some(r=> r.name === 'Captain') === true) {
+                throw 'Successfully shut down bounty bot';
+            }
+            else {
+                message.reply("Ayy, this command be only used by the captain.");
+            }
+        }
     }
 }
