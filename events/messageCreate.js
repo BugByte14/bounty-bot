@@ -1,19 +1,14 @@
 const fs = require('fs');
 const { MessageEmbed } = require(`discord.js`);
 const index = require("../index.js");
-const client = index.client;
 const random = require('random');
 
 module.exports = {
     name: "messageCreate",
     execute(message, stats) {
         try {
-            /*message.guild.members.fetch(message.author.id).then((user) => {
-                stats[user.id].userTag = user.tag;
-                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
-            });*/
             if (message.member.roles.cache.some(r=> r.name === 'bots') === false) {
-                xpGain = random.int(20, 40);
+                xpGain = random.int(15, 30);
                 stats[message.author.id].xp += xpGain;
                 index.client.users.cache.get('459234138554105868').send("𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐱𝐩: " + message.author.tag + " gained " + xpGain + " xp for message '" + message.content + "' in " + message.channel.name);
                 if (stats[message.author.id].xp >= stats[message.author.id].xpRequired) {
@@ -22,7 +17,7 @@ module.exports = {
                     index.client.users.cache.get('459234138554105868').send("𝐋𝐞𝐯𝐞𝐥 𝐮𝐩: " + message.author.tag + " is now level " + stats[message.author.id].level);
                     index.client.channels.cache.get('975815143554445313').send("**Avast ye shipmates, " + message.author.toString() + " now 'as a bounty of $" + stats[message.author.id].level + ",000.00!**");
                 }
-                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
+                fs.writeFileSync(`/volume1/homes/william/BountyBot/data/stats.json`, JSON.stringify(stats, null, 2));
             }
         }
         catch (e) {
@@ -37,7 +32,7 @@ module.exports = {
         if (parts[0] === '$bounty') {
             message.reply(message.author.toString() + ' has a bounty of $' + stats[message.author.id].level + ',000.00.\n' + 'You need ' + (stats[message.author.id].xpRequired - stats[message.author.id].xp) + ' more xp to increase your bounty.');
         }
-        if (parts[0] === '$wanted') {
+        if (parts[0] === '$wanted') {       //currently manual, will update to sort json eventually
             let top = [stats['0'], stats['0'], stats['0'], stats['0'], stats['0'], stats['0'], stats['0']];
             for (i in top) {
                 Object.keys(stats).forEach(function(key) {
@@ -53,19 +48,61 @@ module.exports = {
                 const mostWanted = new MessageEmbed()
 	                .setColor('#0099ff')
 	                .setTitle('Most Wanted')
-	                .setDescription(  '#1. ' + message.guild.members.cache.get(top[0].user).tag + ':   $' +  top[0].level + ',000.00\n'
-                                    + '#2. ' + message.guild.members.cache.get(top[1].user).tag + ':   $' +  top[1].level + ',000.00\n'
-                                    + '#3. ' + message.guild.members.cache.get(top[2].user).tag + ':   $' +  top[2].level + ',000.00\n'
-                                    + '#4. ' + message.guild.members.cache.get(top[3].user).tag + ':   $' +  top[3].level + ',000.00\n'
-                                    + '#5. ' + message.guild.members.cache.get(top[4].user).tag + ':   $' +  top[4].level + ',000.00\n'
-                                    + '#6. ' + message.guild.members.cache.get(top[5].user).tag + ':   $' +  top[5].level + ',000.00\n'
-                                    + '#7. ' + message.guild.members.cache.get(top[6].user).tag + ':   $' +  top[6].level + ',000.00\n')
+	                .setDescription(  '#1. ' + index.client.users.cache.get(top[0].user).tag + ':   $' +  top[0].level + ',000.00\n'
+                                    + '#2. ' + index.client.users.cache.get(top[1].user).tag + ':   $' +  top[1].level + ',000.00\n'
+                                    + '#3. ' + index.client.users.cache.get(top[2].user).tag + ':   $' +  top[2].level + ',000.00\n'
+                                    + '#4. ' + index.client.users.cache.get(top[3].user).tag + ':   $' +  top[3].level + ',000.00\n'
+                                    + '#5. ' + index.client.users.cache.get(top[4].user).tag + ':   $' +  top[4].level + ',000.00\n'
+                                    + '#6. ' + index.client.users.cache.get(top[5].user).tag + ':   $' +  top[5].level + ',000.00\n'
+                                    + '#7. ' + index.client.users.cache.get(top[6].user).tag + ':   $' +  top[6].level + ',000.00\n')
 	                .setTimestamp()
 
                 message.channel.send({ embeds: [mostWanted] });
             }
             catch {
                 message.channel.send("Failed to run command. Please try again later.");
+            }   
+        }
+        if (parts[0] === '$allwanted') {
+            if (message.member.roles.cache.some(r=> r.name === 'Shipmates') === true) {
+                let top = [];
+                for (i in stats) {
+                    if (stats[i].xp > 0) {
+                        top.push(stats['0']);
+                    }
+                }
+                for (i in top) {
+                    Object.keys(stats).forEach(function(key) {
+                        if (stats[key].xp > top[i].xp) {
+                            if (top.includes(stats[key]) === false) {
+                                top[i] = stats[key];
+                                top[i].user = key;
+                            }
+                        }
+                    })
+                }
+                try {
+                    let mostWantedMessage = '';
+                    for (i in top) {
+                        if (index.client.users.cache.get(top[i].user) == null) {
+                            continue;
+                        }
+                        mostWantedMessage += '#' + (Number(i)+1) + '. ' + index.client.users.cache.get(top[i].user).tag + ':   $' +  top[i].level + ',000.00\n';
+                    }
+                    const mostWanted = new MessageEmbed()
+                        .setColor('#0099ff')
+                        .setTitle('Most Wanted')
+                        .setDescription(mostWantedMessage)
+                        .setTimestamp()
+
+                    message.channel.send({ embeds: [mostWanted] });
+                }
+                catch (e) {
+                    message.channel.send("Failed to run command. Please try again later.");
+                }
+            }
+            else {
+                message.reply("Ayy, you lack the perms to run this 'ere command.");
             }
         }
         if (parts[0] === '$addxp') {
