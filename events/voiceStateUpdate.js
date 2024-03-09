@@ -3,13 +3,13 @@ const index = require("../index.js");
 
 module.exports = {
     name: "voiceStateUpdate",
-    execute(oldState, newState, stats) {      
+    execute(oldState, newState, stats) {    
         try {
             let newUserChannel = newState.channel;
             let oldUserChannel = oldState.channel;
             if ((oldUserChannel === null || oldUserChannel.id === '975832580857405531') && newUserChannel !== null) {
                 stats[newState.member.user.id].joinTime = Date.now();
-                fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
+                fs.writeFileSync(`/volume1/homes/william/BountyBot/data/stats.json`, JSON.stringify(stats, null, 2));
             }
             else if (oldUserChannel !== null && oldUserChannel.id !== '975832580857405531') {
                 if (newUserChannel === null || newUserChannel.id === '975832580857405531') {       //checks if user left vc or moved to afk vc, stops counting xp
@@ -33,7 +33,7 @@ module.exports = {
                         }
                         stats[oldState.member.user.id].joinTime = 0;
                         stats[oldState.member.user.id].leaveTime = 0;
-                        fs.writeFileSync(`./data/stats.json`, JSON.stringify(stats, null, 2));
+                        fs.writeFileSync(`/volume1/homes/william/BountyBot/data/stats.json`, JSON.stringify(stats, null, 2));
                     }
                     catch (e) {
                         console.error(e.message);
@@ -43,6 +43,6 @@ module.exports = {
         }
         catch (e) {
             console.error(e.message);
-        }
+        } 
     }
 }
