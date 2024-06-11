@@ -1,5 +1,5 @@
 # Bounty Bot
-A levelling discord bot I developed for use on the [scallywags discord server](https://discord.gg/scallywags).
+A levelling discord bot I developed for use on the [scallywags discord server](https://discord.gg/8dvVQNTbA2).
 
 ## Features
 * Counts messages users (except bots) send.
